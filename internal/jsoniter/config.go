@@ -2,7 +2,7 @@ package jsoniter
 
 import (
 	"encoding/json"
-	"github.com/modern-go/reflect2"
+	"github.com/smartlet/jsonlib/internal/reflect2"
 	"io"
 	"reflect"
 	"sync"

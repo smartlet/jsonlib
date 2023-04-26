@@ -2,7 +2,7 @@ package jsoniter
 
 import (
 	"fmt"
-	"github.com/modern-go/reflect2"
+	"github.com/smartlet/jsonlib/internal/reflect2"
 	"reflect"
 	"sort"
 	"strings"

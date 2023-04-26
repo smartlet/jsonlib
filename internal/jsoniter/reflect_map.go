@@ -7,7 +7,7 @@ import (
 	"sort"
 	"unsafe"
 
-	"github.com/modern-go/reflect2"
+	"github.com/smartlet/jsonlib/internal/reflect2"
 )
 
 func decoderOfMap(ctx *ctx, typ reflect2.Type) ValDecoder {

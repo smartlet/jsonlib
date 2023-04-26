@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/modern-go/reflect2"
+	"github.com/smartlet/jsonlib/internal/reflect2"
 )
 
 func decoderOfStruct(ctx *ctx, typ reflect2.Type) ValDecoder {

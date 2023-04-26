@@ -1,7 +1,7 @@
 package jsoniter
 
 import (
-	"github.com/modern-go/reflect2"
+	"github.com/smartlet/jsonlib/internal/reflect2"
 	"reflect"
 	"unsafe"
 )

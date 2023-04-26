@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"unsafe"
 
-	"github.com/modern-go/reflect2"
+	"github.com/smartlet/jsonlib/internal/reflect2"
 )
 
 var marshalerType = reflect2.TypeOfPtr((*json.Marshaler)(nil)).Elem()

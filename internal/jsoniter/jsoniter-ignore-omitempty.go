@@ -3,9 +3,6 @@ package jsoniter
 /******************************************************************************\
 # jsoniter扩展
 
-## 修改github.com/modern-go/reflect2依赖路径
-- 将"github.com/smartlet/jsonlib/internal/reflect2"替换为"github.com/smartlet/jsonlib/internal/reflect2"
-
 ## 扩展ignoreOmitempty
 - 修改config.go:[68]
 ```
