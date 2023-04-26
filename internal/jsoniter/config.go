@@ -284,19 +284,8 @@ func (cfg *frozenConfig) cleanEncoders() {
 
 func (cfg *frozenConfig) MarshalToString(v interface{}) (string, error) {
 	stream := cfg.BorrowStream(nil)
+	defer cfg.ReturnStream(stream)
 	stream.ignoreOmitempty = false
-	defer cfg.ReturnStream(stream)
-	stream.WriteVal(v)
-	if stream.Error != nil {
-		return "", stream.Error
-	}
-	return string(stream.Buffer()), nil
-}
-
-func (cfg *frozenConfig) MarshalToStringIgnoreOmitempty(v interface{}) (string, error) {
-	stream := cfg.BorrowStream(nil)
-	stream.ignoreOmitempty = true
-	defer cfg.ReturnStream(stream)
 	stream.WriteVal(v)
 	if stream.Error != nil {
 		return "", stream.Error
@@ -306,22 +295,8 @@ func (cfg *frozenConfig) MarshalToStringIgnoreOmitempty(v interface{}) (string, 
 
 func (cfg *frozenConfig) Marshal(v interface{}) ([]byte, error) {
 	stream := cfg.BorrowStream(nil)
+	defer cfg.ReturnStream(stream)
 	stream.ignoreOmitempty = false
-	defer cfg.ReturnStream(stream)
-	stream.WriteVal(v)
-	if stream.Error != nil {
-		return nil, stream.Error
-	}
-	result := stream.Buffer()
-	copied := make([]byte, len(result))
-	copy(copied, result)
-	return copied, nil
-}
-
-func (cfg *frozenConfig) MarshalIgnoreOmitempty(v interface{}) ([]byte, error) {
-	stream := cfg.BorrowStream(nil)
-	stream.ignoreOmitempty = true
-	defer cfg.ReturnStream(stream)
 	stream.WriteVal(v)
 	if stream.Error != nil {
 		return nil, stream.Error
@@ -344,20 +319,6 @@ func (cfg *frozenConfig) MarshalIndent(v interface{}, prefix, indent string) ([]
 	newCfg := cfg.configBeforeFrozen
 	newCfg.IndentionStep = len(indent)
 	return newCfg.frozeWithCacheReuse(cfg.extraExtensions).Marshal(v)
-}
-
-func (cfg *frozenConfig) MarshalIndentIgnoreOmitempty(v interface{}, prefix, indent string) ([]byte, error) {
-	if prefix != "" {
-		panic("prefix is not supported")
-	}
-	for _, r := range indent {
-		if r != ' ' {
-			panic("indent can only be space")
-		}
-	}
-	newCfg := cfg.configBeforeFrozen
-	newCfg.IndentionStep = len(indent)
-	return newCfg.frozeWithCacheReuse(cfg.extraExtensions).MarshalIgnoreOmitempty(v)
 }
 
 func (cfg *frozenConfig) UnmarshalFromString(str string, v interface{}) error {
@@ -400,12 +361,6 @@ func (cfg *frozenConfig) Unmarshal(data []byte, v interface{}) error {
 func (cfg *frozenConfig) NewEncoder(writer io.Writer) *Encoder {
 	stream := NewStream(cfg, writer, 512)
 	stream.ignoreOmitempty = false
-	return &Encoder{stream}
-}
-
-func (cfg *frozenConfig) NewEncoderIgnoreOmitempty(writer io.Writer) *Encoder {
-	stream := NewStream(cfg, writer, 512)
-	stream.ignoreOmitempty = true
 	return &Encoder{stream}
 }
 

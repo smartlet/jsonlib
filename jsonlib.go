@@ -6,47 +6,53 @@ import (
 )
 
 type (
-	Config  = jsoniter.Config
 	Decoder = jsoniter.Decoder
 	Encoder = jsoniter.Encoder
 )
 
-var iterator, iteratorIgnoreOmitempty = Config{
+var config = jsoniter.Config{
 	EscapeHTML:                    false,
 	MarshalFloatWith6Digits:       false, // will lose precession
 	ObjectFieldMustBeSimpleString: true,  // do not unescape object field
-}.FrozeIgnoreOmitempty()
-
-func Marshal(v any) ([]byte, error) {
-	return iterator.Marshal(v)
-}
+}.Froze().(*jsoniter.FrozenConfig)
 
 func MarshalToString(v any) (string, error) {
-	return iterator.MarshalToString(v)
+	return config.MarshalToString(v)
+}
+func MarshalToStringIgnoreOmitempty(v any) (string, error) {
+	return config.MarshalToStringIgnoreOmitempty(v)
 }
 
-func Unmarshal(data []byte, v interface{}) error {
-	return iterator.Unmarshal(data, v)
-}
-
-func NewEncoder(writer io.Writer) *Encoder {
-	return iterator.NewEncoder(writer)
-}
-
-func NewDecoder(reader io.Reader) *Decoder {
-	return iterator.NewDecoder(reader)
+func Marshal(v any) ([]byte, error) {
+	return config.Marshal(v)
 }
 
 func MarshalIgnoreOmitempty(v any) ([]byte, error) {
-	return iteratorIgnoreOmitempty.Marshal(v)
+	return config.MarshalIgnoreOmitempty(v)
 }
 
-func MarshalToStringIgnoreOmitempty(v any) (string, error) {
-	return iteratorIgnoreOmitempty.MarshalToString(v)
+func MarshalIndent(v interface{}, prefix, indent string) ([]byte, error) {
+	return config.MarshalIndent(v, prefix, indent)
+}
+
+func MarshalIndentIgnoreOmitempty(v interface{}, prefix, indent string) ([]byte, error) {
+	return config.MarshalIndentIgnoreOmitempty(v, prefix, indent)
+}
+
+func NewEncoder(writer io.Writer) *Encoder {
+	return config.NewEncoder(writer)
 }
 
 func NewEncoderIgnoreOmitempty(writer io.Writer) *Encoder {
-	return iteratorIgnoreOmitempty.NewEncoder(writer)
+	return config.NewEncoderIgnoreOmitempty(writer)
+}
+
+func Unmarshal(data []byte, v interface{}) error {
+	return config.Unmarshal(data, v)
+}
+
+func NewDecoder(reader io.Reader) *Decoder {
+	return config.NewDecoder(reader)
 }
 
 func ToJson(v any) string {
