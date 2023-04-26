@@ -2,13 +2,11 @@ package jsoniter
 
 import (
 	"encoding/json"
+	"github.com/modern-go/reflect2"
 	"io"
 	"reflect"
 	"sync"
 	"unsafe"
-
-	"github.com/modern-go/concurrent"
-	"github.com/modern-go/reflect2"
 )
 
 // Config customize how the API should behave.
@@ -72,19 +70,20 @@ type frozenConfig struct {
 	objectFieldMustBeSimpleString bool
 	onlyTaggedField               bool
 	disallowUnknownFields         bool
-	decoderCache                  *concurrent.Map
-	encoderCache                  *concurrent.Map
+	decoderCache                  *sync.Map
+	encoderCache                  *sync.Map
 	encoderExtension              Extension
 	decoderExtension              Extension
 	extraExtensions               []Extension
 	streamPool                    *sync.Pool
 	iteratorPool                  *sync.Pool
 	caseSensitive                 bool
+	ignoreOmitempty               bool
 }
 
 func (cfg *frozenConfig) initCache() {
-	cfg.decoderCache = concurrent.NewMap()
-	cfg.encoderCache = concurrent.NewMap()
+	cfg.decoderCache = &sync.Map{}
+	cfg.encoderCache = &sync.Map{}
 }
 
 func (cfg *frozenConfig) addDecoderToCache(cacheKey uintptr, decoder ValDecoder) {
@@ -111,7 +110,7 @@ func (cfg *frozenConfig) getEncoderFromCache(cacheKey uintptr) ValEncoder {
 	return nil
 }
 
-var cfgCache = concurrent.NewMap()
+var cfgCache = &sync.Map{}
 
 func getFrozenConfigFromCache(cfg Config) *frozenConfig {
 	obj, found := cfgCache.Load(cfg)
