@@ -2,6 +2,8 @@ package jsonlib
 
 import (
 	"context"
+	"errors"
+	"net/http"
 )
 
 type Invoke struct {
@@ -15,7 +17,10 @@ type Invoke struct {
 }
 
 type InvokeSetting struct {
+	Trace func(req *http.Request, rsp *http.Response, err error) // 追踪打印请求函数
 }
+
+var ErrInvalidStatus = errors.New("invalid status")
 
 type InvokeClient interface {
 	Do(ctx context.Context, method string, invoke *Invoke) (int, error)
